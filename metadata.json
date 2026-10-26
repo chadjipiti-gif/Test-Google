@@ -1,0 +1,8 @@
+{
+  "name": "Real-Time Meeting Copilot",
+  "description": "High-speed 3-column utilitarian meeting copilot with live microphone transcription, background notes matching, and instant spoken guidance.",
+  "requestFramePermissions": [
+    "microphone"
+  ],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

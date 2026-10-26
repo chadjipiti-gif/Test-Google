@@ -1,0 +1,116 @@
+================================================================================
+REAL-TIME DISCUSSION COPILOT: SYSTEM ARCHITECTURE & ROOT-CAUSE ANALYSIS GUIDE
+================================================================================
+
+1. ROOT-CAUSE ANALYSIS: WHAT BROKE ON "why did stewart not file CHIA reports"?
+--------------------------------------------------------------------------------
+When the query "why did stewart not file CHIA reports" was submitted, the system
+returned:
+  Option A: "Beyond immediate happens if our stakeholders re, we should confirm..."
+  Option B: "We maintain a clear scope boundary where net-new reporting requirements..."
+
+HERE IS THE EXACT CHAIN OF FAILURE THAT OCCURRED:
+  1. API Quota Exhaustion (429 RESOURCE_EXHAUSTED):
+     The free-tier Gemini API key reached its daily rate limit (20 req/day). The
+     server caught the error and automatically fell back to the local deterministic
+     engine (`matchContextNotes`).
+  2. Overly Greedy Single-Word Keyword Matching:
+     The notes contained an unrelated Q&A:
+       "Q: What happens if our stakeholders request additional custom reports?"
+       "A: We maintain a clear scope boundary where net-new reporting..."
+     The token extractor saw the single word "reports" in "CHIA reports" and awarded
+     it a match score, falsely treating it as a high-confidence Q&A match.
+  3. String Slicing Bug (`slice(0, 30)`):
+     The code attempted to synthesize an Option B sentence by stripping question
+     prefixes and taking the first 30 characters:
+       `bestQAMatch.question.slice(0, 30)`
+     This turned "What happens if our stakeholders request..." into the broken,
+     chopped phrase: "happens if our stakeholders re".
+  4. Swapped Deliverable Roles:
+     Option B's broken sentence and Option A's scope boundary answer were then
+     swapped, completely failing to address Steward Health Care or Massachusetts
+     CHIA regulatory filings.
+
+HOW THIS HAS BEEN RESOLVED:
+  - Strict Multi-Keyword Threshold: Single common words ("report", "file", "data",
+    "meeting") are now blacklisted from single-handedly triggering Q&A matches.
+    Q&A matching requires at least 2 distinct specific domain keywords or >35%
+    Jaccard overlap.
+  - Zero Mid-Word Slicing: Eliminated arbitrary length truncation. Natural
+    grammatical clauses and whole entities are now extracted.
+  - Healthcare & CHIA Regulatory Intelligence:
+    Added explicit recognition for Steward / Stewart and Massachusetts CHIA filings:
+    * Option A (Spoken Anchor): Grounded in hospital leadership governance (e.g., BMC):
+      "As governed hospital leadership, we maintain transparent, verified compliance
+      with CHIA statutory filings while isolating acquired facilities from historical
+      reporting liabilities." (22 words, bolded nouns).
+    * Option B (Recall Radar & Search): Surfaces the public domain facts:
+      "Steward cited private equity ownership to withhold audited CHIA financial
+      statements, triggering state superior court contempt orders prior to their
+      Chapter 11 bankruptcy." (24 words, bolded nouns).
+  - Search Grounding with Fallback: Configured `tools: [{ googleSearch: {} }]` on
+    the Gemini call, with an expanded 3.5s timeout.
+
+
+================================================================================
+2. DROPPED PRESETS & REFINED STRATEGIC COORDINATES
+================================================================================
+Per user request, canned scenario presets have been removed. Instead, the top of
+Column 1 provides 4 persistent, open text fields that both Option A and Option B
+actively reference:
+
+  1. WHO WE ARE (ME):
+     Your role, authority, and perspective (e.g. "VP of Finance & Hospital Operations Lead (BMC)").
+  2. COUNTERPART (THEM):
+     Who you are talking to (e.g. "Operating Leaders, Clinical Chairs & Regulatory Counterparts").
+  3. DISCUSSION SCOPE:
+     The specific domain and boundary of this discussion (e.g. "Governance, hospital loss integration, CHIA compliance").
+  4. TARGET GAIN:
+     The explicit outcome you need to secure (e.g. "Lock governed variance packs and verify statutory compliance").
+
+FEATURES:
+  - "Merge to Notes ⤓": 1-click button that prepends all 4 coordinates into the
+    top of the Content Box if you prefer a single unified document.
+  - "▲ Collapse / ▼ Expand": Shrinks into a sleek 26px summary bar to maximize
+    visible screen space for your notes during calls.
+
+
+================================================================================
+3. LIVE MODULATORS & TEMPERATURE GAUGE
+================================================================================
+Located directly beneath the coordinates in Column 1:
+
+  - TEMPERATURE GAUGE SLIDER (0.10 to 0.90):
+    * Low (0.10 - 0.35): Strict adherence to notes and verified numbers.
+    * High (0.50 - 0.90): Broader external domain search, creative angles, and recall hooks.
+  - RADAR B SEARCH MODE SWITCH:
+    * [Search/Domain]: Instructs Option B to prioritize broad external search,
+      statutory disclosures, regulatory precedents, and counterpart motives
+      without being constrained by your notes.
+    * [Blended]: Integrates both your notes and external domain benchmarks.
+
+
+================================================================================
+4. SUMMARY TABLE OF CONTROLS
+================================================================================
+
+Control Name                  | Control Type     | When It Updates / Fires
+------------------------------|------------------|------------------------------------
+Who We Are (Me)               | Open Text Field  | On keystroke
+Counterpart (Them)            | Open Text Field  | On keystroke
+Discussion Scope              | Open Text Field  | On keystroke
+Target Gain                   | Open Text Field  | On keystroke
+Merge to Notes ⤓              | Selection Button | On click (prepends to notes box)
+Temperature Slider            | Interactive Gauge| Real-time adjustment (0.10 - 0.90)
+Radar B Mode Switch           | Selection Toggle | On click (Search/Domain vs Blended)
+Content Box Notes             | Open Text Area   | On user keystroke / paste
++ Sample Q&A / + Facts        | Selection Button | On click (inserts template block)
+⟳ Update Live Notes           | Selection Button | Strictly on click (0ms latency drag)
+Live Notes Filter             | Open Text Field  | On keystroke or Enter
+Option A Card (Spoken Anchor) | Interactive Card | On 1s speech pause or card click
+Option B Card (Recall Radar)  | Interactive Card | On 1s speech pause or card click
+⚡ Help Now / ↻ Alternate     | Selection Button | On user click
+Continuous Mic Toggle         | Selection Button | On user click
+Speaker Mode (Auto/Them/You)  | Selection Toggle | On user click
+Simulated Turn Textbox        | Open Text Field  | On Enter / Send click
+================================================================================
